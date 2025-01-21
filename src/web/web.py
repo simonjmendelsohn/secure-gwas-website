@@ -207,7 +207,13 @@ async def fetch_plot_file(user_id) -> Response:
     _, _, doc_ref_dict = await fetch_study(study_id, user_id)
     role: str = str(doc_ref_dict["participants"].index(user_id))
 
-    plot_name = "manhattan" if "GWAS" in doc_ref_dict["study_type"] else "pca_plot"
+    if "GWAS" in doc_ref_dict["study_type"]:
+        plot_name = "manhattan"
+    elif "DTI" in doc_ref_dict["study_type"]:
+        plot_name = "roc_test"
+        role = "1"
+    else:
+        plot_name = "pca_plot"
 
     if plot := download_blob_to_bytes(constants.RESULTS_BUCKET, f"{study_id}/p{role}/{plot_name}.png"):
         return await send_file(
