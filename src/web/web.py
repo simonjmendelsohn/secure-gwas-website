@@ -210,7 +210,7 @@ async def fetch_plot_file(user_id) -> Response:
     if "GWAS" in doc_ref_dict["study_type"]:
         plot_name = "manhattan"
     elif "DTI" in doc_ref_dict["study_type"]:
-        plot_name = "roc_test"
+        plot_name = "roc_pr_test"
         role = "1"
     else:
         plot_name = "pca_plot"
