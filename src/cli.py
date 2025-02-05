@@ -76,8 +76,10 @@ async def upload_file() -> Tuple[dict, int]:
         file_path = f"{study.id}/p{study.role}/manhattan.png"
     elif "pca_plot" in str(file.filename):
         file_path = f"{study.id}/p{study.role}/pca_plot.png"
-    elif str(file.filename) in ("pos.txt", "roc_pr_test.png"):
-        file_path = f"{study.id}/{file.filename}"
+    elif "roc_pr" in str(file.filename):
+        file_path = f"{study.id}/p{study.role}/roc_pr.png"
+    elif "pos.txt" == str(file.filename):
+        file_path = f"{study.id}/pos.txt"
     else:
         file_path = f"{study.id}/p{study.role}/result.txt"
 
