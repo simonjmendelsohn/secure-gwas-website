@@ -52,7 +52,11 @@ async def _get_study():
     doc = await study_ref.get()
     study = doc.to_dict()
     PARTICIPANTS_KEY = "participants"
-    if not study or PARTICIPANTS_KEY in study and user_id not in study[PARTICIPANTS_KEY]:
+    if (
+        not study
+        or PARTICIPANTS_KEY in study
+        and user_id not in study[PARTICIPANTS_KEY]
+    ):
         raise Forbidden()
     elif PARTICIPANTS_KEY not in study:
         raise Conflict("study has no participants")
@@ -102,7 +106,11 @@ async def get_study_options() -> Tuple[dict, int]:
     auth_keys_doc = await _get_db().collection("users").document("auth_keys").get()
     auth_keys = auth_keys_doc.to_dict() or {}
 
-    options = [value | {"auth_key": key} for key, value in auth_keys.items() if username == value["username"]]
+    options = [
+        value | {"auth_key": key}
+        for key, value in auth_keys.items()
+        if username == value["username"]
+    ]
 
     return {"options": options}, 200
 
@@ -118,12 +126,16 @@ async def update_firestore() -> Tuple[dict, int]:
     try:
         _, parameter = request.args.get("msg", "").split("::")
     except:
-        raise BadRequest("msg must be in the format 'update_firestore::parameter=value'")
+        raise BadRequest(
+            "msg must be in the format 'update_firestore::parameter=value'"
+        )
 
     study = await _get_study()
 
     try:
-        gcp_project = str(study.dict["personal_parameters"][study.user_id]["GCP_PROJECT"]["value"])
+        gcp_project = str(
+            study.dict["personal_parameters"][study.user_id]["GCP_PROJECT"]["value"]
+        )
     except KeyError:
         raise Conflict("GCP_PROJECT not found")
 
